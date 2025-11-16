@@ -1,0 +1,6 @@
+local beans = "beans"
+
+while true do
+task.wait(0.01)
+print(beans)
+end
