@@ -1,0 +1,122 @@
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+
+--------------------------------------------------------
+--  ALLOW / DISALLOW SKIDDED FROM XZX LOOOOOL
+--------------------------------------------------------
+
+do
+    local PlayerGui = player:WaitForChild("PlayerGui")
+
+    if PlayerGui:FindFirstChild("PolliIntro") then
+        PlayerGui.PolliIntro:Destroy()
+    end
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "PolliIntro"
+    gui.IgnoreGuiInset = true
+    gui.Parent = PlayerGui
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundColor3 = Color3.new(0, 0, 0)
+    frame.BackgroundTransparency = 1
+    frame.Parent = gui
+
+    local text = Instance.new("TextLabel")
+    text.Size = UDim2.new(1, 0, 1, 0)
+    text.BackgroundTransparency = 1
+    text.Text = "VANTAHUB 🔥
+Made by Tre"
+    text.Font = Enum.Font.GothamBlack
+    text.TextScaled = true
+    text.TextColor3 = Color3.fromRGB(255, 255, 255)
+    text.TextTransparency = 1
+    text.Parent = gui
+
+    TweenService:Create(frame, TweenInfo.new(0.8, Enum.EasingStyle.Quad), {BackgroundTransparency = 0}):Play()
+    TweenService:Create(text, TweenInfo.new(0.8, Enum.EasingStyle.Quad), {TextTransparency = 0}):Play()
+
+    task.wait(1.8)
+
+    local fadeOut1 = TweenService:Create(frame, TweenInfo.new(1.5, Enum.EasingStyle.Quad), {BackgroundTransparency = 1})
+    local fadeOut2 = TweenService:Create(text, TweenInfo.new(1.5, Enum.EasingStyle.Quad), {TextTransparency = 1})
+    fadeOut1:Play()
+    fadeOut2:Play()
+
+    fadeOut2.Completed:Wait()
+    gui:Destroy()
+end
+
+--------------------------------------------------------
+--  MAIN GUI BUTTON (Updated: smaller, no stroke, new text)
+--------------------------------------------------------
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "AllowFriends"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = game:GetService("CoreGui")
+
+local button = Instance.new("TextButton")
+button.Name = "DraggableButton"
+button.Size = UDim2.fromOffset(150, 50) -- smaller
+button.Position = UDim2.new(1, -180, 0, 40) -- top-right
+button.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+button.BorderSizePixel = 0
+button.Text = "Allow / Disallow" -- new text
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Font = Enum.Font.GothamBold
+button.TextSize = 20
+button.Parent = screenGui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 14)
+corner.Parent = button
+
+-- Removed UIStroke (as you requested)
+
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+local function updateInput(input)
+    if dragging then
+        local delta = input.Position - dragStart
+        button.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end
+
+button.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = button.Position
+    end
+end)
+
+button.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        updateInput(input)
+    end
+end)
+
+button.MouseButton1Click:Connect(function()
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Net"):WaitForChild("RE/PlotService/ToggleFriends"):FireServer()
+end)
+
+button.TouchTap:Connect(function()
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Net"):WaitForChild("RE/PlotService/ToggleFriends"):FireServer()
+end)
